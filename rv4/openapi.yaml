@@ -1,0 +1,835 @@
+openapi: 3.0.0
+info:
+  description: "This is the documentation for ClannyAPI"
+  version: RV4
+  title: ClannyAPI
+  contact:
+    url: https://clanny.systems/
+    email: api.support@clanny.systems
+    name: "Clanny"
+tags:
+  - name: exp
+    description: Endpoints to manage exp
+  - name: ranks
+    description: Endpoints to manage ranks
+  - name: medals
+    description: Endpoints to manage medals
+  - name: pendingjoin
+    description: Endpoints to manage pending users
+  - name: util
+    description: Utility endpoints
+paths:
+  /exp/{userid}:
+    get:
+      tags:
+        - exp
+      summary: Views a user xp
+      operationId: viewXp
+      parameters:
+        - name: userid
+          in: path
+          description: Roblox user ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewXp200"
+    post:
+     tags:
+       - exp
+     summary: Performs an action on user's xp
+     operationId: changeXp
+     parameters:
+       - name: userid
+         in: path
+         description: Roblox userID
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: groupId
+         in: header
+         description: Roblox group ID
+         schema:
+           type: string
+         required: true
+       - name: keyId
+         in: header
+         description: ClannyAPI key ID
+         schema:
+           type: string
+         required: true
+       - name: authorization
+         in: header
+         description: ClannyAPI key
+         schema:
+           type: string
+         required: true
+     requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                operation:
+                  description: Operation to perform
+                  type: string
+                  enum:
+                    - add
+                    - remove
+                    - set
+                amount:
+                  description: Amount to use in the operation
+                  type: integer
+     responses:
+       "400":
+         description: Invalid input
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+       "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+       "200":
+         description: Success!
+         content:
+           application/json:
+             schema:
+               $ref: "#/components/schemas/ViewXp200"
+  /rank/{userid}:
+    get:
+      tags:
+        - ranks
+      summary: Get ranks close to a user including the current rank
+      operationId: viewCloseUserRanks
+      parameters:
+        - name: userid
+          in: path
+          description: Roblox user ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   $ref: "#/components/schemas/CloseRanks"
+    post:
+     tags:
+       - ranks
+     summary: Changes a user's rank
+     operationId: changeUserRank
+     parameters:
+       - name: userid
+         in: path
+         description: Roblox userID
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: groupId
+         in: header
+         description: Roblox group ID
+         schema:
+           type: string
+         required: true
+       - name: keyId
+         in: header
+         description: ClannyAPI key ID
+         schema:
+           type: string
+         required: true
+       - name: authorization
+         in: header
+         description: ClannyAPI key
+         schema:
+           type: string
+         required: true
+     requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  description: Action to perform
+                  type: string
+                  enum:
+                    - promote
+                    - demote
+                    - set
+                target:
+                  description: Rank to set user to, only gets used when `action` is `set`
+                  type: integer
+     responses:
+       "400":
+         description: Invalid input
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+       "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+       "200":
+         description: Success!
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   $ref: "#/components/schemas/ChangeRankResult"
+  /rank:
+    get:
+      tags:
+        - ranks
+      summary: Get group ranks
+      operationId: viewGroupRanks
+      parameters:
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   $ref: "#/components/schemas/RankArray"
+  /medal:
+    get:
+      tags:
+        - medals
+      summary: Get group medals
+      operationId: viewGroupMedals
+      parameters:
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   $ref: "#/components/schemas/Medals"
+  /medal/{userid}:
+    get:
+      tags:
+        - medals
+      summary: Get user medals
+      operationId: viewUserMedals
+      parameters:
+        - name: userid
+          in: path
+          description: Roblox user ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   $ref: "#/components/schemas/UserMedals"
+  /medal/{userid}/{medalid}:
+    post:
+     tags:
+       - medals
+     summary: Award a medal to a user
+     operationId: awardUserMedal
+     parameters:
+       - name: userid
+         in: path
+         description: Roblox userID
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: medalid
+         in: path
+         description: ID of the medal to award
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: groupId
+         in: header
+         description: Roblox group ID
+         schema:
+           type: string
+         required: true
+       - name: keyId
+         in: header
+         description: ClannyAPI key ID
+         schema:
+           type: string
+         required: true
+       - name: authorization
+         in: header
+         description: ClannyAPI key
+         schema:
+           type: string
+         required: true
+     responses:
+       "400":
+         description: Invalid input
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+       "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+       "200":
+         description: Success!
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   type: string
+                   description: Internal response from AwardMedal
+                   enum:
+                     - notsetup
+                     - added1
+                     - createdStore
+    delete:
+     tags:
+       - medals
+     summary: Remove a medal from a user
+     operationId: unawardUserMedal
+     parameters:
+       - name: userid
+         in: path
+         description: Roblox userID
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: medalid
+         in: path
+         description: ID of the medal to remove from the user
+         required: true
+         schema:
+           type: integer
+           format: int64
+       - name: groupId
+         in: header
+         description: Roblox group ID
+         schema:
+           type: string
+         required: true
+       - name: keyId
+         in: header
+         description: ClannyAPI key ID
+         schema:
+           type: string
+         required: true
+       - name: authorization
+         in: header
+         description: ClannyAPI key
+         schema:
+           type: string
+         required: true
+     responses:
+       "400":
+         description: Invalid input
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+       "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+       "200":
+         description: Success!
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+                 data:
+                   type: string
+                   description: Internal response from UnAwardMedal
+                   enum:
+                     - notsetup
+                     - removed1
+                     - deletedStore
+                     - doesntHaveMedal
+  /pendingjoin/{userid}/{action}:
+    get:
+      tags:
+        - pendingjoin
+      summary: Handle pending request
+      operationId: handlePendingJoin
+      parameters:
+        - name: userid
+          in: path
+          description: Roblox user ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: action
+          in: path
+          description: Action to perform
+          required: true
+          schema:
+            type: string
+            enum:
+              - accept
+              - decline
+        - name: groupId
+          in: header
+          description: Roblox group ID
+          schema:
+            type: string
+          required: true
+        - name: keyId
+          in: header
+          description: ClannyAPI key ID
+          schema:
+            type: string
+          required: true
+        - name: authorization
+          in: header
+          description: ClannyAPI key
+          schema:
+            type: string
+          required: true
+      responses:
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401"
+        "200":
+          description: Success!
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                 status:
+                   type: integer
+                   description: HTTP Status code
+                   default: 200
+                 statusMessage:
+                   type: string
+                   description: HTTP Status with extra information, can be shown to user
+                   default: "OK"
+externalDocs:
+  description: Join the Discord server
+  url: https://discord.gg/WWYsWjr
+servers:
+  - url: https://clanny-api-shard-1-1.herokuapp.com/rv4
+  - url: https://clanny-api-shard-1-2.herokuapp.com/rv4
+  - url: https://api.clanny.systems/rv4
+components:
+  schemas: 
+    "400":
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status code
+          default: 400
+        statusMessage:
+          type: string
+          description: HTTP Status with extra information, can be shown to user
+          default: "Bad request"
+    "401":
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status code
+          default: 401
+        statusMessage:
+          type: string
+          description: HTTP Status with extra information, can be shown to user
+          default: "Invalid key"
+    ViewXp200:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP Status code
+          default: 200
+        statusMessage:
+          type: string
+          description: HTTP Status with extra information, can be shown to user
+          default: "OK"
+        data:
+          type: integer
+          default: 69
+    Rank:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Long unique Roblox rank ID, provided by Roblox
+          default: 2368721
+        locked:
+          type: boolean
+          description: Wether automatic promotion or demotion from and to that rank is disabled
+          default: true
+        name:
+          type: string
+          description: Rank name, provided by Roblox
+          default: "Clanny"
+        perm:
+          #type: string
+          #description: Clanny permission level, developer and higher is impossible.
+          #enum:
+          #  - "Normal"
+          #  - "Officer"
+          #  - "HICOM"
+          #  - "Owner"
+          #  - "GroupOwner"
+          #  - "Developer"
+          #  - "Impossible"
+          #default: "Owner"
+          type: integer
+          description: "Clanny permission level. `0`: Normal, `1`: Officer, `2`: HICOM, `3`: Owner, `4`: GroupOwner, `5`: Developer, `6`: Impossible. `5` or higher cannot be achieved"
+          default: 0
+        rank:
+          type: integer
+          description: "Rank place (1 to 255), provided by Roblox"
+          default: 200
+        xp:
+          type: integer
+          description: "Exp required to reach this rank, will and should only be used if locked is `false`"
+          default: 0
+        prefix:
+          type: string
+          description: "Username prefix for this rank, will only be used if group has premium"
+          default: "[UNPAID INTERN]"
+        prefixEnabled:
+          type: boolean
+          description: "If username prefix is enabled for this rank, will only be used if group has premium"
+          default: true
+        role:
+          type: string
+          description: "Discord role ID for this rank, will only be used if this group has premium"
+          default: "683719180817661969"
+        roleEnabled:
+          type: boolean
+          description: "If Discord role is enabled for this rank, will only be used if this group has premium"
+          default: true
+    RankArray:
+      type: array
+      items: 
+        $ref: "#/components/schemas/Rank"
+    CloseRanks:
+      type: object
+      description: Previous and Next can be `null`!
+      properties:
+        Previous:
+          $ref: "#/components/schemas/Rank"
+        Current:
+          $ref: "#/components/schemas/Rank"
+        Next:
+          $ref: "#/components/schemas/Rank"
+    Role:
+      type: object
+      description: "Provided by Roblox"
+      properties:
+        name:
+          type: string
+          description: "Rank name"
+        memberCount:
+          type: number
+          description: "Amount of members on that rank"
+        rank:
+          type: number
+          description: "Rank place (1 to 255)"
+        id:
+          type: number
+          description: "Long unique Roblox rank ID"
+    ChangeRankResult:
+      type: object
+      properties:
+        newRole:
+          $ref: "#/components/schemas/Role"
+        oldRole:
+          $ref: "#/components/schemas/Role"
+    Medal:
+      type: object
+      properties:
+        Description:
+          type: string
+          description: "Long medal description"
+        Name:
+          type: string
+          description: "Short medal name"
+        Emoji:
+          type: string
+          description: "Discord Emoji"
+        Id:
+          type: integer
+          description: "Unique user provided ID"
+    Medals:
+      type: array
+      items:
+        $ref: "#/components/schemas/Medal"
+    UserMedal:
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: "Amount of medals of this type the user has"
+        id:
+          type: integer
+          description: "Medal ID, can be used to get medal data"
+    UserMedals:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserMedal"
+# Working on Clanny has given me so much valuable knowledge, thank you everyone for this amazing opportunity to learn. Before starting Clanny I did not know what Javascript was, if I can recover the vNaN Clanny source code ill upload it to github
