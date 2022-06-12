@@ -33,13 +33,13 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: groupId
+        - name: group-id
           in: header
           description: Roblox group ID
           schema:
             type: string
           required: true
-        - name: keyId
+        - name: key-id
           in: header
           description: ClannyAPI key ID
           schema:
@@ -282,13 +282,13 @@ paths:
       summary: Get group ranks
       operationId: viewGroupRanks
       parameters:
-        - name: groupId
+        - name: group-id
           in: header
           description: Roblox group ID
           schema:
             type: string
           required: true
-        - name: keyId
+        - name: key-id
           in: header
           description: ClannyAPI key ID
           schema:
@@ -337,13 +337,13 @@ paths:
       summary: Get group medals
       operationId: viewGroupMedals
       parameters:
-        - name: groupId
+        - name: group-id
           in: header
           description: Roblox group ID
           schema:
             type: string
           required: true
-        - name: keyId
+        - name: key-id
           in: header
           description: ClannyAPI key ID
           schema:
@@ -399,13 +399,13 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: groupId
+        - name: group-id
           in: header
           description: Roblox group ID
           schema:
             type: string
           required: true
-        - name: keyId
+        - name: key-id
           in: header
           description: ClannyAPI key ID
           schema:
@@ -468,13 +468,13 @@ paths:
          schema:
            type: integer
            format: int64
-       - name: groupId
+       - name: group-id
          in: header
          description: Roblox group ID
          schema:
            type: string
          required: true
-       - name: keyId
+       - name: key-id
          in: header
          description: ClannyAPI key ID
          schema:
@@ -541,13 +541,13 @@ paths:
          schema:
            type: integer
            format: int64
-       - name: groupId
+       - name: group-id
          in: header
          description: Roblox group ID
          schema:
            type: string
          required: true
-       - name: keyId
+       - name: key-id
          in: header
          description: ClannyAPI key ID
          schema:
@@ -618,13 +618,13 @@ paths:
             enum:
               - accept
               - decline
-        - name: groupId
+        - name: group-id
           in: header
           description: Roblox group ID
           schema:
             type: string
           required: true
-        - name: keyId
+        - name: key-id
           in: header
           description: ClannyAPI key ID
           schema:
